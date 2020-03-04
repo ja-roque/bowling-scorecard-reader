@@ -6,4 +6,8 @@ class Player
     @scores = scores
   end
 
+  def build_lane
+    @lane = Lane.new self
+  end
+
 end
