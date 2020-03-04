@@ -1,3 +1,3 @@
 require_relative 'bowling'
 
-Bowling.new ARGV[0]
+Bowling.new(ARGV[0]).start

@@ -5,12 +5,12 @@ class Bowling
 
   def initialize(scorecard_file)
     puts '* Reading the scorecard file *'
-    @file = File.read(scorecard_file)
-    start
+    @file = ScoreCard::TextFile.new(scorecard_file)
   end
 
   def start
-    player_scores_hash = ScoreCard::TextFile.new(file).parse
+    file.read
+    player_scores_hash = file.parse
     puts player_scores_hash
   end
 
