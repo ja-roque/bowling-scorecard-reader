@@ -1,5 +1,6 @@
 require 'rspec'
 require_relative '../scorecard/score_card'
+require_relative '../game'
 
 describe 'Bowling' do
 
@@ -23,6 +24,13 @@ describe 'Bowling' do
     scorecard.read
     file_hash = scorecard.parse
     expect(file_hash).to eq(model_score_hash)
+
+  end
+
+  it 'Should create Player objects from hash' do
+    game = Game.new(model_score_hash)
+    game.create_players
+    expect(game.players).to all(be_a(Player))
 
   end
 
