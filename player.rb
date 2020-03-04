@@ -8,6 +8,7 @@ class Player
 
   def build_lane
     @lane = Lane.new self
+    lane.fill_lane
   end
 
 end

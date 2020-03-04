@@ -8,4 +8,16 @@ class Lane
     @frames[-1] = LastFrame.new
   end
 
+  def fill_lane
+    score_array = player.scores.dup
+    @frames.each.with_index(1) do |frame, index|
+      while score_array.any?
+        frame.frame_number = index
+        frame.add_roll score_array.shift
+        break if frame.stop_rolling?
+      end
+
+    end
+  end
+
 end
