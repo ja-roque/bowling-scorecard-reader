@@ -1,6 +1,10 @@
 require 'rspec'
 require_relative '../scorecard/score_card'
 require_relative '../game'
+require_relative '../player'
+require_relative '../lane'
+require_relative '../frame'
+require_relative '../last_frame'
 
 describe 'Bowling' do
 
@@ -31,6 +35,20 @@ describe 'Bowling' do
     game = Game.new(model_score_hash)
     game.create_players
     expect(game.players).to all(be_a(Player))
+
+  end
+
+  it 'Player should build its lane' do
+    player = Player.new(model_score_hash.keys.first, model_score_hash.first)
+    player.build_lane
+    expect(player.lane).to be_a(Lane)
+
+  end
+
+  it 'Lanes should contain 10 frames' do
+    player = Player.new(model_score_hash.keys.first, model_score_hash.first)
+    player.build_lane
+    expect(player.lane.frames).to all(be_a(Frame))
 
   end
 
