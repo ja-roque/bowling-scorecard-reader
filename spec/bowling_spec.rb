@@ -52,4 +52,12 @@ describe 'Bowling' do
 
   end
 
+  it 'Frames should be able to append their rolls' do
+
+  end
+
+  it 'Frames should have rolls 3 or less rolls but more than 0  ' do
+
+  end
+
 end
