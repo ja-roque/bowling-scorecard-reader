@@ -2,12 +2,13 @@ class Roll
 
   attr_accessor :pins, :foul, :display
 
-  VALID_ROLL_VALS = (0..10).to_a + %W['F','f']
+  VALID_ROLL_VALS = (0..10).to_a + %w[F f]
 
   def initialize(roll_data)
     # Raise BowlingError("Invalid Roll Data #{roll_data}") unless VALID_ROLL_VALS.include? roll_data
     @pins = roll_data.to_i
     @display = pins
+    identify_roll roll_data
   end
 
   def strike!

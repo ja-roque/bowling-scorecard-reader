@@ -1,3 +1,5 @@
+require_relative 'lane'
+
 class Player
   attr_accessor :name, :scores, :lane
 

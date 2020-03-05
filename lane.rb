@@ -1,3 +1,6 @@
+require_relative 'frame'
+require_relative 'last_frame'
+
 class Lane
   DEFAULT_FRAME_COUNT = 10
   attr_accessor :player, :frames
