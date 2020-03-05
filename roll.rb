@@ -7,4 +7,33 @@ class Roll
     @display = pins
   end
 
+  def identify_roll(roll_data)
+    if roll_data.downcase == 'f'
+      foul!
+    elsif pins.positive? && pins <= 10
+      strike!
+    elsif pins.zero?
+      # Can display 0s as ' - '
+    else
+      puts 'Raise invalid roll data'
+    end
+  end
+
+  def strike!
+    @display = 'X' if strike?
+  end
+
+  def spare!
+    @display = '/'
+  end
+
+  def foul!
+    @foul = true
+    @display = 'F'
+  end
+
+  def strike?
+    pins == 10
+  end
+
 end

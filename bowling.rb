@@ -11,7 +11,8 @@ class Bowling
   def start
     file.read
     player_scores_hash = file.parse
-    puts player_scores_hash
+    game = Game.new(player_scores_hash)
+    game.create_players
   end
 
 end

@@ -39,24 +39,32 @@ describe 'Bowling' do
   end
 
   it 'Player should build its lane' do
-    player = Player.new(model_score_hash.keys.first, model_score_hash.first)
+    player = Player.new(model_score_hash.keys.first, model_score_hash[model_score_hash.keys.first])
     player.build_lane
     expect(player.lane).to be_a(Lane)
 
   end
 
   it 'Lanes should contain 10 frames' do
-    player = Player.new(model_score_hash.keys.first, model_score_hash.first)
+    player = Player.new(model_score_hash.keys.first, model_score_hash[model_score_hash.keys.first])
     player.build_lane
     expect(player.lane.frames).to all(be_a(Frame))
 
   end
 
   it 'Frames should be able to append their rolls' do
+    frame = Frame.new
+    2.times do
+      frame.add_roll('10')
+    end
 
+    expect(frame.rolls).to all(be_a(Roll))
   end
 
-  it 'Frames should have rolls 3 or less rolls but more than 0  ' do
+  it 'All frames from a lane should have 3 or less rolls but more than 0' do
+    player = Player.new(model_score_hash.keys.first, model_score_hash[model_score_hash.keys.first])
+    player.build_lane
+    expect(player.lane.frames.map { |frame| frame.rolls.length }).to all(be < 3 || be > 0)
 
   end
 
