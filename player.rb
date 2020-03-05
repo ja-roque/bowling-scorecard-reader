@@ -11,6 +11,7 @@ class Player
   def build_lane
     @lane = Lane.new self
     lane.fill_lane
+    lane.calculate_scores
   end
 
 end
