@@ -5,6 +5,7 @@ require_relative '../player'
 require_relative '../lane'
 require_relative '../frame'
 require_relative '../last_frame'
+require_relative '../bowling_error'
 
 describe 'Bowling' do
 
@@ -64,8 +65,50 @@ describe 'Bowling' do
   it 'All frames from a lane should have 3 or less rolls but more than 0' do
     player = Player.new(model_score_hash.keys.first, model_score_hash[model_score_hash.keys.first])
     player.build_lane
-    expect(player.lane.frames.map { |frame| frame.rolls.length }).to all(be < 3 || be > 0)
+    expect(player.lane.frames.map { |frame| frame.rolls.length }).to all(be <= 3 || be > 0)
 
+  end
+
+  it 'should not allow invalid pinfall values' do
+    invalids = %w[10 3 23 f U 0 -2 a d4]
+    expect { invalids.each { |invalid_val| Roll.new(invalid_val) } }.to raise_error BowlingError
+
+  end
+
+  it 'should add to 0 when all pinfalls for the lane are 0' do
+    player = Player.new('Joe', ('0' * 20).split(''))
+    player.build_lane
+    expect(player.lane.frames.last.score).to be 0
+
+  end
+
+  it 'should add to 0 when all pinfalls for the lane are F' do
+    player = Player.new('Joe', ('F' * 20).split(''))
+    player.build_lane
+    expect(player.lane.frames.last.score).to be 0
+
+  end
+
+  it 'should add to 300 when all pinfalls for the lane are 10' do
+    player = Player.new('Joe', ('10,' * 12).split(','))
+    player.build_lane
+
+    expect(player.lane.frames.last.score).to be 300
+
+  end
+
+  it 'should not allow too many pinfall values' do
+    fake_scorecard = ("cheater 9 \n" * 22)
+    scorecard = ScoreCard::TextFile.new('sample.txt')
+    scorecard.scorecard_file = fake_scorecard
+    expect { scorecard.parse }.to raise_error BowlingError
+  end
+
+  it 'should not allow too little pinfall values' do
+    fake_scorecard = ("cheater 9 \n" * 9)
+    scorecard = ScoreCard::TextFile.new('sample.txt')
+    scorecard.scorecard_file = fake_scorecard
+    expect { scorecard.parse }.to raise_error BowlingError
   end
 
 end

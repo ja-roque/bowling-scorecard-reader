@@ -1,5 +1,6 @@
 require 'terminal-table'
 require_relative '../lane'
+require_relative '../bowling_error'
 
 FRAME_COUNT = Lane::DEFAULT_FRAME_COUNT
 
@@ -7,7 +8,8 @@ module ScoreCard
 
   class TextFile
 
-    attr_reader :filename, :scorecard_file
+    attr_reader :filename
+    attr_accessor :scorecard_file
 
     def initialize(filename)
       @filename = filename
@@ -19,11 +21,38 @@ module ScoreCard
 
     def parse
       player_score_array = scorecard_file.split("\n")
+      # player_score_array = scorecard_file.scan(proper_format).flatten # <--- Flexibilidad de entrada acordada en el correo para el bono
+      raise BowlingError, "Wrong scorecard text file format, aborting." unless player_score_array.any? { |line| proper_format.match line }
+
       score_pairs = player_score_array.map(&:split)
-      score_pairs.each_with_object({}) do |pair, hash|
+      player_scores_hash = score_pairs.each_with_object({}) do |pair, hash|
         hash[pair.first] ||= []
         hash[pair.first] << pair.last
       end
+
+      pinfall_healthcheck player_scores_hash
+    end
+
+    private
+
+    def proper_format
+      /(\w+?\s\d+|\w+?\s[Ff])/
+    end
+
+    def pinfall_healthcheck(player_scores_hash)
+      error_message = nil
+      player_scores_hash.each do |player, read_scores|
+        pinfalls = read_scores.dup
+        pinfalls.map!(&:to_i)
+        if pinfalls.length > 21 || (pinfalls.length == 21 && pinfalls.last(3).first(2).reduce(:+) < 10)
+          error_message = "Too many pinfalls detected for player: #{player}"
+        elsif pinfalls.length < 10 || (pinfalls.length == 21 && pinfalls.last(3).first(2).reduce(:+) < 10)
+          error_message = "Too little pinfalls detected for player: #{player}"
+        end
+        raise BowlingError, error_message if error_message
+      end
+
+      player_scores_hash
     end
 
   end
