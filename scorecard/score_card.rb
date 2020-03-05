@@ -1,3 +1,8 @@
+require 'terminal-table'
+require_relative '../lane'
+
+FRAME_COUNT = Lane::DEFAULT_FRAME_COUNT
+
 module ScoreCard
 
   class TextFile
@@ -19,6 +24,38 @@ module ScoreCard
         hash[pair.first] ||= []
         hash[pair.first] << pair.last
       end
+    end
+
+  end
+
+  class ParsedData
+
+    attr_reader :game_data
+
+    def initialize(game)
+      @game_data = game
+    end
+
+    def print_table
+      table = Terminal::Table.new(style: { width: 120 }) do |t|
+        t << ['Frame', (1..FRAME_COUNT).to_a].flatten
+        t << :separator
+
+        game_data.players.each do |player|
+          t.add_separator
+          t.add_row [player.name, Array.new(FRAME_COUNT)].flatten
+
+          rolls = player.lane.frames.map(&:rolls).map do |roll|
+            roll.map(&:display).join '  '
+          end
+
+          t.add_row ['pinfalls', rolls].flatten
+          t.add_row ['score', player.lane.frames.map(&:score)].flatten
+        end
+
+      end
+
+      puts table
     end
 
   end
