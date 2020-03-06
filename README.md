@@ -28,4 +28,8 @@ in an unofficial manner. ( Not in written in the official specifications documen
 So it's commented out but it's functionality was tested and it works as expected.
 It is basically a more flexible way to parse the score data by using regexp.
 
+# ---------------------------------------------------
+
+ps: Terminal table gem rocks. It transformed a plain-looking project into a beautiful one! 
+
  
